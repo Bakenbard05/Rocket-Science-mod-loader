@@ -90,18 +90,24 @@ namespace RocketScienceModLoader
         {
             modName = ModName.Text;
             String strProcessName = "Rocket Science";
-            Int32 ProcId = GetProcessId(strProcessName);
-            if(ProcId >= 0)
+            try
             {
-                if(File.Exists($"./{modName}Loader.dll"))
+                Int32 ProcId = GetProcessId(strProcessName);
+                if(ProcId >= 0)
                 {
-                    File.Delete($"./{modName}Loader.dll");
+                    if(File.Exists($"./{modName}Loader.dll"))
+                    {
+                        File.Delete($"./{modName}Loader.dll");
+                    }
+                    CompileMod(modName);
+                    File.Move("code.dll", $"./{modName}Loader.dll");
+                    FileInfo f = new FileInfo($"{modName}Loader.dll");
+                    Console.WriteLine(f.FullName.Replace(@"\", "/"));
+                    InjectDLL(f.FullName.Replace(@"\", "/"));
                 }
-                CompileMod(modName);
-                File.Move("code.dll", $"./{modName}Loader.dll");
-                FileInfo f = new FileInfo($"{modName}Loader.dll");
-                Console.WriteLine(f.FullName.Replace(@"\", "/"));
-                InjectDLL(f.FullName.Replace(@"\", "/"));
+            } catch(IndexOutOfRangeException ex)
+            {
+                MessageBox.Show("Something wrong... Are you sure that game is running?");
             }
         }
 
@@ -113,10 +119,17 @@ namespace RocketScienceModLoader
         private void CheckProcess_Click(object sender, RoutedEventArgs e)
         {
             String strProcessName = "Rocket Science";
-            Process proc = Process.GetProcessesByName(strProcessName)[0];
-            foreach (ProcessModule mod in proc.Modules)
+            try
             {
-                Console.WriteLine(mod.ModuleName);
+                Process proc = Process.GetProcessesByName(strProcessName)[0];
+                foreach (ProcessModule mod in proc.Modules)
+                {
+                    Console.WriteLine(mod.ModuleName);
+                }
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                MessageBox.Show("Something wrong... Are you sure that game is running?");
             }
         }
     }
