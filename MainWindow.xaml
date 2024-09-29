@@ -1,0 +1,23 @@
+﻿<Window x:Class="RocketScienceModLoader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RocketScienceModLoader"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <TextBox x:Name="ModName" Width="180px" Height="60px" Margin="310,187,310,187" RenderTransformOrigin="0.5,1" TextChanged="ModName_TextChanged">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="150"/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+        <Button x:Name="InjectButton" Content="LoadMod" Width="180px" Height="180px" Click="InjectButton_Click"></Button>
+        <Button x:Name="CheckProcess" Content="Check Process" Width="200px" Height="100px" Margin="490,297,110,37" Click="CheckProcess_Click"></Button>
+    </Grid>
+</Window>
