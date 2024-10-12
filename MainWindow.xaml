@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="ModName" Width="180px" Height="60px" Margin="310,187,310,187" RenderTransformOrigin="0.5,1" TextChanged="ModName_TextChanged">
+        <TextBox x:Name="ModName" Width="180px" Height="60px" Margin="310,162,310,212" RenderTransformOrigin="0.5,1" TextChanged="ModName_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -17,7 +17,10 @@
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <Button x:Name="InjectButton" Content="LoadMod" Width="180px" Height="180px" Click="InjectButton_Click"></Button>
-        <Button x:Name="CheckProcess" Content="Check Process" Width="200px" Height="100px" Margin="490,297,110,37" Click="CheckProcess_Click"></Button>
+        <Button x:Name="InjectButton" Content="LoadMod" Width="180px" Click="InjectButton_Click" Margin="310,207,310,127"/>
+        <Button x:Name="CheckProcess" Content="Check Process" Width="200px" Height="100px" Margin="525,207,75,127" Click="CheckProcess_Click"></Button>
+        <Button x:Name="DetachButton" Content="Detach DLL" Width="200px" Height="100px" Margin="80,207,520,127" Click="DetachButton_Click"></Button>
+        <TextBox x:Name="DetachName" HorizontalAlignment="Left" Margin="80,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="200" Height="60"/>
+
     </Grid>
 </Window>

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace RocketScienceModLoader
 {
@@ -27,15 +28,12 @@ namespace RocketScienceModLoader
             procList = Process.GetProcessesByName(proc);
             return procList[0].Id;
         }
-
-
-
-        public static void InjectDLL(String dllPath)
+        public static void InjectDLL(string procName, string dllPath)
         {
             int exitCode;
             ProcessStartInfo processInfo;
             Process process;
-            processInfo = new ProcessStartInfo("Inject.exe", dllPath);
+            processInfo = new ProcessStartInfo("Inject.exe", $"l \"{procName}.exe\" {dllPath}");
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
             processInfo.Verb = "runas";
@@ -54,11 +52,35 @@ namespace RocketScienceModLoader
             Console.WriteLine(output);
             process.Close();
         }
+        public static void DeinjectDLL(string processName, string dllName)
+        {
+            int exitCode;
+            ProcessStartInfo processInfo;
+            Process process;
+            processInfo = new ProcessStartInfo("Inject.exe", $"u {processName} {dllName}");
+            processInfo.CreateNoWindow = true;
+            processInfo.UseShellExecute = false;
+            processInfo.Verb = "runas";
+            // *** Redirect the output ***
+            processInfo.RedirectStandardError = true;
+            processInfo.RedirectStandardOutput = true;
+            process = Process.Start(processInfo);
+            process.WaitForExit();
+            // *** Read the streams ***
+            // Warning: This approach can lead to deadlocks, see Edit #2
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+            exitCode = process.ExitCode;
+            Console.WriteLine(error);
+            Console.WriteLine(output);
+            process.Close();
+        }
+        
         public void CompileMod(string name)
         {
             // Создаёт dll загрузчика
             // Creates dll of loader
-            string t1 = "// dllmain.cpp : Defines the entry point for the DLL application.\r\n#include \"pch.h\"\r\n#include <windows.h>\r\n#include <iostream>\r\n#include <mono/jit/jit.h>\r\n";
+            string t1 = "// dllmain.cpp : Defines the entry point for the DLL application.\r\n#include \"pch.h\"\r\n#include <windows.h>\r\n#include <iostream>\r\n#include <mono/jit/jit.h>\r\n#include <fstream>\r\n#include <iostream>\r\n#include <mono/metadata/metadata.h>\r\n#include <mono/metadata/assembly.h>\r\n#include <mono/metadata/image.h>\r\n#include <mono/metadata/object.h>\r\n#include <mono/metadata/class.h>\r\n#include <mono/metadata/object-forward.h>\r\n";
             string t = $"#define ASSEMBLY_PATH \"/{name}.dll\"\r\n";
             string loader_text = File.ReadAllText(".\\LoaderFiles\\loader\\dllmain.cpp");
             string loade_code = t1 + t + loader_text;
@@ -103,7 +125,7 @@ namespace RocketScienceModLoader
                     File.Move("code.dll", $"./{modName}Loader.dll");
                     FileInfo f = new FileInfo($"{modName}Loader.dll");
                     Console.WriteLine(f.FullName.Replace(@"\", "/"));
-                    InjectDLL(f.FullName.Replace(@"\", "/"));
+                    InjectDLL(strProcessName, f.FullName.Replace(@"\", "/"));
                 }
             } catch(IndexOutOfRangeException ex)
             {
@@ -131,6 +153,13 @@ namespace RocketScienceModLoader
             {
                 MessageBox.Show("Something wrong... Are you sure that game is running?");
             }
+        }
+
+        private void DetachButton_Click(object sender, RoutedEventArgs e)
+        {
+            modName = ModName.Text;
+            DeinjectDLL("\"Rocket Science.exe\"", $"\"{modName}Loader.dll\"");
+            DeinjectDLL("\"Rocket Science.exe\"", $"\"{modName}.dll\"");
         }
     }
 }
