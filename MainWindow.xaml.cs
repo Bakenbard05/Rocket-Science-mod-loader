@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 
 namespace RocketScienceModLoader
 {
@@ -80,8 +72,8 @@ namespace RocketScienceModLoader
         {
             // Создаёт dll загрузчика
             // Creates dll of loader
-            string t1 = "// dllmain.cpp : Defines the entry point for the DLL application.\r\n#include \"pch.h\"\r\n#include <windows.h>\r\n#include <iostream>\r\n#include <mono/jit/jit.h>\r\n#include <fstream>\r\n#include <iostream>\r\n#include <mono/metadata/metadata.h>\r\n#include <mono/metadata/assembly.h>\r\n#include <mono/metadata/image.h>\r\n#include <mono/metadata/object.h>\r\n#include <mono/metadata/class.h>\r\n#include <mono/metadata/object-forward.h>\r\n";
-            string t = $"#define ASSEMBLY_PATH \"/{name}.dll\"\r\n";
+            string t1 = "// dllmain.cpp : Defines the entry point for the DLL application.\r\n#include \"pch.h\"\r\n#include <windows.h>\r\n#include <iostream>\r\n#include <mono/jit/jit.h>\r\n#include <fstream>\r\n#include <iostream>\r\n#include <mono/metadata/metadata.h>\r\n#include <mono/metadata/assembly.h>\r\n#include <mono/metadata/image.h>\r\n#include <mono/metadata/object.h>\r\n#include <mono/metadata/class.h>\r\n#include <vector>\r\n";
+            string t = $"#define ASSEMBLY_PATH \"/{name}.dll\"\r\n#define FILE_NAME \"{name}.dll\"\r\n";
             string loader_text = File.ReadAllText(".\\LoaderFiles\\loader\\dllmain.cpp");
             string loade_code = t1 + t + loader_text;
             File.WriteAllText(".\\LoaderFiles\\loader\\code.cpp", loade_code);
